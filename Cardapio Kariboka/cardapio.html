@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kariboka — Cardápio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ve:#0d2b1a;--vf:#122e1e;--vm:#1a4d2e;--vv:#2d7a4f;--vc:#4caf7d;--vb:#6fcf97;
+  --do:#c9a84c;--dc:#f0c96e;--cr:#f5f0e8;--ce:#e8ddc8;--tc:#d4e8d4;
+}
+html,body{min-height:100vh;background:var(--vf);color:var(--cr);font-family:'Crimson Pro',Georgia,serif;overflow-x:hidden}
+
+/* NAV */
+nav{background:rgba(13,43,26,0.97);border-bottom:1px solid rgba(201,168,76,0.25);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Cinzel Decorative',cursive;color:var(--do);letter-spacing:3px;font-size:1.1rem;cursor:pointer}
+.logo small{color:rgba(212,232,212,0.5);font-family:'Crimson Pro',serif;font-size:0.7rem;display:block;letter-spacing:4px;text-transform:uppercase;font-style:italic}
+.nav-right{display:flex;align-items:center;gap:10px}
+.carrinho-btn{background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);color:var(--dc);padding:9px 18px;border-radius:2px;font-family:'Crimson Pro',serif;font-size:0.85rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;gap:8px}
+.carrinho-btn:hover{background:rgba(201,168,76,0.22)}
+.badge{background:var(--do);color:var(--ve);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;font-family:sans-serif;transition:transform 0.2s}
+.admin-btn{background:rgba(26,77,46,0.4);border:1px solid rgba(76,175,125,0.25);color:rgba(212,232,212,0.5);padding:9px 14px;border-radius:2px;font-family:'Crimson Pro',serif;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.3s}
+.admin-btn:hover{color:var(--vb);border-color:rgba(76,175,125,0.5)}
+
+/* TABS */
+.tabs{display:flex;background:rgba(13,43,26,0.5);border-bottom:1px solid rgba(201,168,76,0.12);padding:0 24px}
+.tab{padding:13px 24px;font-family:'Crimson Pro',serif;font-size:0.88rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:rgba(212,232,212,0.45);border-bottom:2px solid transparent;transition:all 0.3s;background:none;border-left:none;border-right:none;border-top:none}
+.tab.active{color:var(--do);border-bottom-color:var(--do)}
+
+/* HERO */
+.hero-mini{background:radial-gradient(ellipse at 50% 100%,rgba(45,122,79,0.2),transparent 70%),linear-gradient(180deg,#060f09,var(--ve));padding:40px 24px 30px;text-align:center}
+.hero-mini h1{font-family:'Cinzel Decorative',cursive;font-size:clamp(2rem,8vw,3.5rem);color:#fff;letter-spacing:8px;text-shadow:0 0 40px rgba(111,207,151,0.2);margin-bottom:6px}
+.hero-mini p{font-style:italic;color:rgba(212,232,212,0.6);font-size:1rem;letter-spacing:2px}
+
+/* GRID */
+main{padding:24px}
+.panel{display:none}.panel.active{display:block}
+.items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.item-card{background:rgba(10,31,18,0.85);border:1px solid rgba(201,168,76,0.18);border-radius:3px;overflow:hidden;transition:transform 0.35s,box-shadow 0.35s}
+.item-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,0.5),0 0 0 1px rgba(201,168,76,0.3)}
+.card-img{width:100%;height:155px;object-fit:cover;display:block;filter:brightness(0.82) saturate(1.1);transition:transform 0.5s}
+.item-card:hover .card-img{transform:scale(1.05)}
+.card-img-ph{width:100%;height:155px;background:rgba(26,77,46,0.25);display:flex;align-items:center;justify-content:center;color:rgba(212,232,212,0.12);font-size:2.5rem}
+.card-body{padding:14px 16px 16px}
+.card-cat{font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--vc);margin-bottom:5px}
+.card-nome{font-family:'Cinzel Decorative',cursive;font-size:0.9rem;color:var(--cr);margin-bottom:5px;line-height:1.3}
+.card-desc{font-style:italic;font-size:0.82rem;color:rgba(212,232,212,0.48);line-height:1.5;margin-bottom:12px}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.card-preco{font-family:'Cinzel Decorative',cursive;font-size:1rem;color:var(--dc)}
+.btn-add-card{background:rgba(26,77,46,0.6);border:1px solid rgba(76,175,125,0.3);color:var(--vb);padding:6px 14px;border-radius:2px;font-family:'Crimson Pro',serif;font-size:0.78rem;letter-spacing:2px;cursor:pointer;transition:all 0.25s}
+.btn-add-card:hover{background:rgba(76,175,125,0.2);border-color:var(--vc)}
+.vazio{text-align:center;font-style:italic;color:rgba(212,232,212,0.3);padding:60px 20px;grid-column:1/-1;border:1px dashed rgba(201,168,76,0.15);border-radius:3px}
+
+/* DRAWER CARRINHO */
+.drawer-bg{display:none;position:fixed;inset:0;background:rgba(6,15,9,0.8);z-index:200}
+.drawer-bg.show{display:block}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:min(420px,100vw);background:var(--ve);border-left:1px solid rgba(201,168,76,0.25);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.4,0,0.2,1)}
+.drawer.open{transform:translateX(0)}
+.drawer-head{padding:20px 24px;border-bottom:1px solid rgba(201,168,76,0.18);display:flex;align-items:center;justify-content:space-between}
+.drawer-head h2{font-family:'Cinzel Decorative',cursive;font-size:1rem;color:var(--cr);letter-spacing:2px}
+.btn-fechar{background:none;border:none;color:rgba(212,232,212,0.4);font-size:1.4rem;cursor:pointer;transition:color 0.2s;padding:4px}
+.btn-fechar:hover{color:var(--cr)}
+.drawer-items{flex:1;overflow-y:auto;padding:16px 24px}
+.drawer-items::-webkit-scrollbar{width:4px}
+.drawer-items::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:2px}
+.cart-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(201,168,76,0.1)}
+.cart-item:last-child{border-bottom:none}
+.cart-img{width:52px;height:52px;object-fit:cover;border-radius:2px;flex-shrink:0;filter:brightness(0.85)}
+.cart-img-ph{width:52px;height:52px;background:rgba(26,77,46,0.3);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.cart-info{flex:1;min-width:0}
+.cart-nome{font-family:'Cinzel Decorative',cursive;font-size:0.82rem;color:var(--cr);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart-preco{font-size:0.85rem;color:var(--dc)}
+.cart-qty{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.qty-btn{background:rgba(26,77,46,0.5);border:1px solid rgba(76,175,125,0.25);color:var(--vb);width:26px;height:26px;border-radius:2px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.qty-btn:hover{background:rgba(76,175,125,0.2)}
+.qty-num{font-family:'Cinzel Decorative',cursive;font-size:0.9rem;color:var(--cr);min-width:20px;text-align:center}
+.drawer-form{padding:16px 24px;border-top:1px solid rgba(201,168,76,0.18);background:rgba(10,25,15,0.6)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.campo-cli label{font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--do);display:block;margin-bottom:4px}
+.campo-cli input{width:100%;background:rgba(26,77,46,0.35);border:1px solid rgba(76,175,125,0.2);border-radius:2px;padding:9px 12px;color:var(--cr);font-family:'Crimson Pro',serif;font-size:0.95rem;outline:none;transition:border-color 0.3s}
+.campo-cli input:focus{border-color:var(--do)}
+.total-line{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;padding:10px 0;border-top:1px solid rgba(201,168,76,0.15);border-bottom:1px solid rgba(201,168,76,0.15)}
+.total-label{font-size:0.75rem;letter-spacing:4px;text-transform:uppercase;color:rgba(212,232,212,0.5)}
+.total-valor{font-family:'Cinzel Decorative',cursive;font-size:1.3rem;color:var(--dc)}
+.btn-wpp{width:100%;padding:13px;background:transparent;border:1px solid #25d366;color:#25d366;font-family:'Crimson Pro',serif;font-size:0.95rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.35s;display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden}
+.btn-wpp::before{content:'';position:absolute;inset:0;background:#25d366;transform:scaleX(0);transform-origin:left;transition:transform 0.35s;z-index:0}
+.btn-wpp:hover{color:var(--ve)}.btn-wpp:hover::before{transform:scaleX(1)}
+.btn-wpp span,.btn-wpp svg{position:relative;z-index:1}
+.carrinho-vazio{text-align:center;padding:40px 20px;color:rgba(212,232,212,0.3);font-style:italic}
+
+/* ====== MODAL LOGIN ADMIN ====== */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(6,15,9,0.92);z-index:500;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-login{background:var(--ve);border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:40px 36px;width:90%;max-width:400px;text-align:center}
+.modal-login h2{font-family:'Cinzel Decorative',cursive;font-size:1.1rem;color:var(--cr);letter-spacing:2px;margin-bottom:6px}
+.modal-login p{font-style:italic;font-size:0.85rem;color:rgba(212,232,212,0.4);margin-bottom:28px}
+.login-campo{margin-bottom:16px;text-align:left}
+.login-campo label{font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--do);display:block;margin-bottom:5px}
+.login-campo input{width:100%;background:rgba(26,77,46,0.4);border:1px solid rgba(76,175,125,0.2);border-radius:2px;padding:10px 14px;color:var(--cr);font-family:'Crimson Pro',serif;font-size:1rem;outline:none;transition:border-color 0.3s}
+.login-campo input:focus{border-color:var(--do)}
+.login-erro{color:#ff9999;font-style:italic;font-size:0.85rem;min-height:18px;margin-bottom:10px}
+.btn-login{width:100%;padding:13px;background:transparent;border:1px solid var(--do);color:var(--dc);font-family:'Crimson Pro',serif;font-size:0.9rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.35s;position:relative;overflow:hidden;margin-bottom:12px}
+.btn-login::before{content:'';position:absolute;inset:0;background:var(--do);transform:scaleX(0);transform-origin:left;transition:transform 0.35s;z-index:0}
+.btn-login:hover{color:var(--ve)}.btn-login:hover::before{transform:scaleX(1)}
+.btn-login span{position:relative;z-index:1}
+.btn-cancelar-login{background:none;border:none;color:rgba(212,232,212,0.3);font-family:'Crimson Pro',serif;font-size:0.8rem;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:color 0.3s}
+.btn-cancelar-login:hover{color:rgba(212,232,212,0.6)}
+
+/* ====== PAINEL ADMIN (dentro da página) ====== */
+.admin-panel{display:none;position:fixed;inset:0;background:var(--vf);z-index:400;overflow-y:auto}
+.admin-panel.show{display:block}
+.admin-nav{background:rgba(13,43,26,0.97);border-bottom:1px solid rgba(201,168,76,0.3);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.admin-logo{font-family:'Cinzel Decorative',cursive;color:var(--do);letter-spacing:3px;font-size:1.1rem}
+.admin-logo span{color:var(--vb);font-size:0.65rem;display:block;letter-spacing:6px;text-transform:uppercase;margin-top:2px}
+.admin-nav-right{display:flex;align-items:center;gap:10px}
+.nav-badge-ti{background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);color:var(--dc);padding:4px 14px;border-radius:2px;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase}
+.btn-sair{background:rgba(180,60,60,0.15);border:1px solid rgba(180,60,60,0.3);color:#ff9999;padding:7px 16px;border-radius:2px;font-family:'Crimson Pro',serif;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.3s}
+.btn-sair:hover{background:rgba(180,60,60,0.3)}
+.admin-tabs{display:flex;background:rgba(13,43,26,0.6);border-bottom:1px solid rgba(201,168,76,0.15);padding:0 28px}
+.admin-tab{padding:13px 26px;font-family:'Crimson Pro',serif;font-size:0.88rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;color:rgba(212,232,212,0.5);border-bottom:2px solid transparent;transition:all 0.3s;background:none;border-left:none;border-right:none;border-top:none}
+.admin-tab:hover{color:var(--tc)}
+.admin-tab.active{color:var(--do);border-bottom-color:var(--do)}
+.admin-main{padding:28px}
+.admin-panel-inner{display:none}.admin-panel-inner.active{display:block}
+.sec-title{font-family:'Cinzel Decorative',cursive;font-size:1rem;color:var(--cr);letter-spacing:2px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,0.2);display:flex;align-items:center;gap:10px}
+.sec-title::before{content:'✦';color:var(--do);font-size:0.75rem}
+.form-card{background:rgba(13,43,26,0.7);border:1px solid rgba(201,168,76,0.2);border-radius:3px;padding:24px 28px;margin-bottom:28px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.campo-admin{display:flex;flex-direction:column;gap:5px}
+.campo-admin label{font-size:0.68rem;letter-spacing:4px;text-transform:uppercase;color:var(--do);opacity:0.85}
+.campo-admin input,.campo-admin select,.campo-admin textarea{background:rgba(26,77,46,0.4);border:1px solid rgba(76,175,125,0.25);border-radius:2px;padding:9px 12px;color:var(--cr);font-family:'Crimson Pro',serif;font-size:0.95rem;outline:none;transition:border-color 0.3s;resize:none}
+.campo-admin input:focus,.campo-admin select:focus,.campo-admin textarea:focus{border-color:var(--do)}
+.campo-admin select option{background:var(--ve);color:var(--cr)}
+.btn-add-item{margin-top:6px;padding:11px 28px;background:transparent;border:1px solid var(--do);color:var(--dc);font-family:'Crimson Pro',serif;font-size:0.85rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s;position:relative;overflow:hidden}
+.btn-add-item::before{content:'';position:absolute;inset:0;background:var(--do);transform:scaleX(0);transform-origin:left;transition:transform 0.3s;z-index:0}
+.btn-add-item:hover{color:var(--ve)}.btn-add-item:hover::before{transform:scaleX(1)}
+.btn-add-item span{position:relative;z-index:1}
+.lista-items{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.item-adm{background:rgba(10,31,18,0.8);border:1px solid rgba(201,168,76,0.18);border-radius:3px;overflow:hidden;transition:transform 0.3s}
+.item-adm:hover{transform:translateY(-3px)}
+.item-adm-img{width:100%;height:140px;object-fit:cover;filter:brightness(0.82)}
+.item-adm-ph{width:100%;height:140px;background:rgba(26,77,46,0.25);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.item-adm-body{padding:14px 16px}
+.item-adm-cat{font-size:0.62rem;letter-spacing:4px;text-transform:uppercase;color:var(--vc);margin-bottom:4px}
+.item-adm-nome{font-family:'Cinzel Decorative',cursive;font-size:0.88rem;color:var(--cr);margin-bottom:4px}
+.item-adm-desc{font-style:italic;font-size:0.8rem;color:rgba(212,232,212,0.45);margin-bottom:10px;line-height:1.4}
+.item-adm-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(201,168,76,0.12);padding-top:10px}
+.item-adm-preco{font-family:'Cinzel Decorative',cursive;font-size:0.95rem;color:var(--dc)}
+.item-adm-acoes{display:flex;gap:7px}
+.btn-edit,.btn-del{padding:4px 11px;font-family:'Crimson Pro',serif;font-size:0.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.25s}
+.btn-edit{background:rgba(26,77,46,0.5);border:1px solid rgba(76,175,125,0.3);color:var(--vb)}
+.btn-edit:hover{background:rgba(76,175,125,0.2)}
+.btn-del{background:rgba(180,60,60,0.15);border:1px solid rgba(180,60,60,0.3);color:#ff9999}
+.btn-del:hover{background:rgba(180,60,60,0.3)}
+.adm-vazio{text-align:center;font-style:italic;color:rgba(212,232,212,0.3);padding:36px;border:1px dashed rgba(201,168,76,0.2);border-radius:3px;grid-column:1/-1}
+.feedback-msg{font-style:italic;font-size:0.88rem;min-height:18px;color:var(--vb)}
+.feedback-msg.erro{color:#ff9999}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px}
+.stat-card{background:rgba(13,43,26,0.7);border:1px solid rgba(201,168,76,0.15);border-radius:3px;padding:18px 22px}
+.stat-num{font-family:'Cinzel Decorative',cursive;font-size:1.7rem;color:var(--do);display:block;margin-bottom:3px}
+.stat-label{font-size:0.7rem;letter-spacing:4px;text-transform:uppercase;color:rgba(212,232,212,0.45)}
+.img-prev{width:100%;height:110px;object-fit:cover;border-radius:2px;margin-top:7px;display:none;border:1px solid rgba(201,168,76,0.2)}
+.img-prev.show{display:block}
+
+/* MODAL EDITAR */
+.edit-bg{display:none;position:fixed;inset:0;background:rgba(6,15,9,0.88);z-index:600;align-items:center;justify-content:center}
+.edit-bg.show{display:flex}
+.edit-modal{background:var(--ve);border:1px solid rgba(201,168,76,0.3);border-radius:3px;padding:30px;width:90%;max-width:500px;max-height:88vh;overflow-y:auto}
+.edit-modal h3{font-family:'Cinzel Decorative',cursive;color:var(--cr);font-size:1rem;letter-spacing:2px;margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(201,168,76,0.2)}
+.edit-acoes{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+.btn-cancel{padding:9px 22px;background:transparent;border:1px solid rgba(212,232,212,0.2);color:rgba(212,232,212,0.45);font-family:'Crimson Pro',serif;font-size:0.82rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s}
+.btn-cancel:hover{border-color:rgba(212,232,212,0.4);color:var(--tc)}
+.btn-save{padding:9px 26px;background:transparent;border:1px solid var(--do);color:var(--dc);font-family:'Crimson Pro',serif;font-size:0.82rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:all 0.3s}
+.btn-save:hover{background:var(--do);color:var(--ve)}
+
+/* WHATSAPP CONFIG */
+.wpp-config{background:rgba(13,43,26,0.7);border:1px solid rgba(37,211,102,0.25);border-radius:3px;padding:24px 28px;margin-bottom:28px}
+.wpp-config h3{font-family:'Cinzel Decorative',cursive;font-size:0.95rem;color:var(--cr);letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.wpp-saved{color:#25d366;font-style:italic;font-size:0.88rem;margin-top:8px;min-height:18px}
+</style>
+</head>
+<body>
+
+<!-- NAV PRINCIPAL -->
+<nav>
+  <div class="logo" onclick="voltarCardapio()">KARIBOKA <small>Parintins, AM</small></div>
+  <div class="nav-right">
+    <button class="admin-btn" onclick="abrirLogin()">⚙ Admin</button>
+    <button class="carrinho-btn" onclick="abrirCarrinho()">
+      🛒 Carrinho
+      <div class="badge" id="cart-badge">0</div>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-mini">
+  <h1>KARIBOKA</h1>
+  <p>Floresta Amazônica · Parintins</p>
+</div>
+
+<!-- TABS CARDÁPIO -->
+<div class="tabs">
+  <button class="tab active" onclick="trocarTab('comidas',this)">🍽 Comidas</button>
+  <button class="tab" onclick="trocarTab('bebidas',this)">🍹 Bebidas</button>
+</div>
+
+<!-- CARDÁPIO -->
+<main>
+  <div id="panel-comidas" class="panel active"><div class="items-grid" id="grid-comidas"></div></div>
+  <div id="panel-bebidas" class="panel"><div class="items-grid" id="grid-bebidas"></div></div>
+</main>
+
+<!-- DRAWER CARRINHO -->
+<div class="drawer-bg" id="drawer-bg" onclick="fecharCarrinho()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>✦ Meu Pedido</h2>
+    <button class="btn-fechar" onclick="fecharCarrinho()">✕</button>
+  </div>
+  <div class="drawer-items" id="drawer-items"></div>
+  <div class="drawer-form">
+    <div class="form-row">
+      <div class="campo-cli"><label>Seu Nome</label><input type="text" id="cli-nome" placeholder="Ex: João Silva"></div>
+      <div class="campo-cli"><label>Nº da Mesa</label><input type="number" id="cli-mesa" placeholder="Ex: 5" min="1"></div>
+    </div>
+    <div class="total-line">
+      <span class="total-label">Total</span>
+      <span class="total-valor" id="total-val">R$ 0,00</span>
+    </div>
+    <button class="btn-wpp" onclick="enviarWhatsApp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span>Enviar Pedido</span>
+    </button>
+  </div>
+</div>
+
+<!-- MODAL LOGIN ADMIN -->
+<div class="modal-bg" id="modal-login">
+  <div class="modal-login">
+    <h2>✦ Área Restrita</h2>
+    <p>Acesso exclusivo para administradores</p>
+    <div class="login-campo"><label>E-mail</label><input type="email" id="login-email" placeholder="seu@email.com" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
+    <div class="login-campo"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"></div>
+    <div class="login-erro" id="login-erro"></div>
+    <button class="btn-login" onclick="fazerLogin()"><span>✦ Entrar</span></button>
+    <button class="btn-cancelar-login" onclick="fecharLogin()">Cancelar</button>
+  </div>
+</div>
+
+<!-- PAINEL ADMIN -->
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-nav">
+    <div class="admin-logo">KARIBOKA <span>painel t.i.</span></div>
+    <div class="admin-nav-right">
+      <div class="nav-badge-ti">✦ Admin</div>
+      <button class="btn-sair" onclick="sairAdmin()">Sair</button>
+    </div>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="trocarAdminTab('dashboard',this)">Dashboard</button>
+    <button class="admin-tab" onclick="trocarAdminTab('comidas',this)">Comidas</button>
+    <button class="admin-tab" onclick="trocarAdminTab('bebidas',this)">Bebidas</button>
+    <button class="admin-tab" onclick="trocarAdminTab('config',this)">Configurações</button>
+  </div>
+  <div class="admin-main">
+
+    <!-- DASHBOARD -->
+    <div id="adm-dashboard" class="admin-panel-inner active">
+      <div class="sec-title">Visão Geral</div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-num" id="st-comidas">0</span><span class="stat-label">Pratos</span></div>
+        <div class="stat-card"><span class="stat-num" id="st-bebidas">0</span><span class="stat-label">Bebidas</span></div>
+        <div class="stat-card"><span class="stat-num" id="st-total">0</span><span class="stat-label">Total Itens</span></div>
+      </div>
+      <div class="form-card" style="text-align:center;padding:36px">
+        <p style="font-style:italic;color:rgba(212,232,212,0.4);margin-bottom:12px">Use as abas para gerenciar o cardápio</p>
+        <p style="font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--do);opacity:0.6">As alterações aparecem instantaneamente no cardápio</p>
+      </div>
+    </div>
+
+    <!-- COMIDAS ADMIN -->
+    <div id="adm-comidas" class="admin-panel-inner">
+      <div class="sec-title">Gerenciar Comidas</div>
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="campo-admin"><label>Nome do Prato</label><input type="text" id="c-nome" placeholder="Ex: Tambaqui Assado"></div>
+          <div class="campo-admin"><label>Categoria</label>
+            <select id="c-cat">
+              <option value="Prato Principal">Prato Principal</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Sobremesa">Sobremesa</option>
+              <option value="Petisco">Petisco</option>
+              <option value="Especial do Dia">Especial do Dia</option>
+            </select>
+          </div>
+          <div class="campo-admin"><label>Preço (R$)</label><input type="number" id="c-preco" placeholder="0.00" step="0.01" min="0"></div>
+          <div class="campo-admin"><label>Foto (URL)</label><input type="text" id="c-img" placeholder="https://..." oninput="prevImg('c-img','c-prev')"><img id="c-prev" class="img-prev"></div>
+          <div class="campo-admin" style="grid-column:1/-1"><label>Descrição</label><textarea id="c-desc" rows="2" placeholder="Ingredientes, preparo..."></textarea></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:6px">
+          <button class="btn-add-item" onclick="addItem('comidas')"><span>✦ Adicionar Prato</span></button>
+          <div class="feedback-msg" id="fb-comidas"></div>
+        </div>
+      </div>
+      <div class="lista-items" id="lista-comidas"></div>
+    </div>
+
+    <!-- BEBIDAS ADMIN -->
+    <div id="adm-bebidas" class="admin-panel-inner">
+      <div class="sec-title">Gerenciar Bebidas</div>
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="campo-admin"><label>Nome da Bebida</label><input type="text" id="b-nome" placeholder="Ex: Suco de Cupuaçu"></div>
+          <div class="campo-admin"><label>Categoria</label>
+            <select id="b-cat">
+              <option value="Suco Natural">Suco Natural</option>
+              <option value="Drink">Drink</option>
+              <option value="Cerveja">Cerveja</option>
+              <option value="Vinho">Vinho</option>
+              <option value="Refrigerante">Refrigerante</option>
+              <option value="Água">Água</option>
+              <option value="Caipirinha">Caipirinha</option>
+              <option value="Coquetel">Coquetel</option>
+            </select>
+          </div>
+          <div class="campo-admin"><label>Preço (R$)</label><input type="number" id="b-preco" placeholder="0.00" step="0.01" min="0"></div>
+          <div class="campo-admin"><label>Foto (URL)</label><input type="text" id="b-img" placeholder="https://..." oninput="prevImg('b-img','b-prev')"><img id="b-prev" class="img-prev"></div>
+          <div class="campo-admin" style="grid-column:1/-1"><label>Descrição</label><textarea id="b-desc" rows="2" placeholder="Ingredientes, volume..."></textarea></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:6px">
+          <button class="btn-add-item" onclick="addItem('bebidas')"><span>✦ Adicionar Bebida</span></button>
+          <div class="feedback-msg" id="fb-bebidas"></div>
+        </div>
+      </div>
+      <div class="lista-items" id="lista-bebidas"></div>
+    </div>
+
+    <!-- CONFIG -->
+    <div id="adm-config" class="admin-panel-inner">
+      <div class="sec-title">Configurações</div>
+      <div class="wpp-config">
+        <h3>📱 WhatsApp do Proprietário</h3>
+        <div class="campo-admin" style="margin-bottom:12px">
+          <label>Número (somente dígitos, com DDD)</label>
+          <input type="text" id="wpp-input" placeholder="Ex: 5592999999999" style="max-width:320px">
+        </div>
+        <button class="btn-add-item" onclick="salvarWpp()"><span>✦ Salvar Número</span></button>
+        <div class="wpp-saved" id="wpp-saved"></div>
+      </div>
+      <div class="form-card" style="padding:24px 28px">
+        <h3 style="font-family:'Cinzel Decorative',cursive;font-size:0.95rem;color:var(--cr);letter-spacing:2px;margin-bottom:16px">🔐 Alterar Senha</h3>
+        <div class="form-grid" style="max-width:420px;gap:12px">
+          <div class="campo-admin" style="grid-column:1/-1"><label>Senha Atual</label><input type="password" id="senha-atual" placeholder="••••••••"></div>
+          <div class="campo-admin"><label>Nova Senha</label><input type="password" id="senha-nova" placeholder="••••••••"></div>
+          <div class="campo-admin"><label>Confirmar Nova Senha</label><input type="password" id="senha-conf" placeholder="••••••••"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:14px">
+          <button class="btn-add-item" onclick="alterarSenha()"><span>✦ Alterar Senha</span></button>
+          <div class="feedback-msg" id="fb-senha"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="edit-bg" id="edit-bg" onclick="fecharEdit(event)">
+  <div class="edit-modal">
+    <h3>Editar Item</h3>
+    <input type="hidden" id="edit-tipo">
+    <input type="hidden" id="edit-id">
+    <div class="form-grid" style="gap:12px">
+      <div class="campo-admin"><label>Nome</label><input type="text" id="edit-nome"></div>
+      <div class="campo-admin"><label>Categoria</label><input type="text" id="edit-cat"></div>
+      <div class="campo-admin"><label>Preço (R$)</label><input type="number" id="edit-preco" step="0.01"></div>
+      <div class="campo-admin"><label>Foto (URL)</label><input type="text" id="edit-img" oninput="prevImg('edit-img','edit-prev')"></div>
+      <div class="campo-admin" style="grid-column:1/-1"><label>Descrição</label><textarea id="edit-desc" rows="3"></textarea></div>
+      <div style="grid-column:1/-1"><img id="edit-prev" class="img-prev"></div>
+    </div>
+    <div class="edit-acoes">
+      <button class="btn-cancel" onclick="document.getElementById('edit-bg').classList.remove('show')">Cancelar</button>
+      <button class="btn-save" onclick="salvarEdicao()">✦ Salvar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CREDENCIAIS ADMIN
+// ============================================================
+const ADMIN_EMAIL = 'mikaiasemanoel28@gmail.com';
+let ADMIN_SENHA = localStorage.getItem('kb_senha') || '@Mikaias11jr';
+
+// ============================================================
+// WHATSAPP
+// ============================================================
+function getWpp(){return localStorage.getItem('kb_wpp')||''}
+
+// ============================================================
+// STORAGE
+// ============================================================
+function getCardapio(tipo){return JSON.parse(localStorage.getItem('kariboka_'+tipo)||'[]')}
+function setCardapio(tipo,arr){localStorage.setItem('kariboka_'+tipo,JSON.stringify(arr))}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2)}
+
+// ============================================================
+// CARDÁPIO (cliente)
+// ============================================================
+let carrinho=[];
+
+function trocarTab(nome,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-'+nome).classList.add('active');
+}
+
+function renderGrid(tipo){
+  const arr=getCardapio(tipo);
+  const el=document.getElementById('grid-'+tipo);
+  el.innerHTML='';
+  if(!arr.length){el.innerHTML=`<div class="vazio">Nenhum item disponível.<br><span style="font-size:0.8rem;opacity:0.5">Volte em breve!</span></div>`;return;}
+  arr.forEach(item=>{
+    const d=document.createElement('div');d.className='item-card';
+    d.innerHTML=`${item.img?`<img class="card-img" src="${item.img}" alt="${item.nome}" onerror="this.outerHTML='<div class=card-img-ph>🍃</div>'">`:`<div class="card-img-ph">🍃</div>`}
+    <div class="card-body">
+      <div class="card-cat">${item.cat}</div>
+      <div class="card-nome">${item.nome}</div>
+      <div class="card-desc">${item.desc||''}</div>
+      <div class="card-footer">
+        <div class="card-preco">R$ ${parseFloat(item.preco).toFixed(2)}</div>
+        <button class="btn-add-card" onclick="addCarrinho('${item.id}','${tipo}')">+ Adicionar</button>
+      </div>
+    </div>`;
+    el.appendChild(d);
+  });
+}
+
+function addCarrinho(id,tipo){
+  const item=getCardapio(tipo).find(i=>i.id===id);
+  if(!item)return;
+  const ex=carrinho.find(i=>i.id===id);
+  if(ex){ex.qty++}else{carrinho.push({...item,qty:1})}
+  atualizarBadge();animarBadge();
+}
+
+function atualizarBadge(){document.getElementById('cart-badge').textContent=carrinho.reduce((s,i)=>s+i.qty,0)}
+function animarBadge(){const b=document.getElementById('cart-badge');b.style.transform='scale(1.6)';setTimeout(()=>b.style.transform='scale(1)',220)}
+
+function abrirCarrinho(){document.getElementById('drawer-bg').classList.add('show');document.getElementById('drawer').classList.add('open');renderCarrinho()}
+function fecharCarrinho(){document.getElementById('drawer-bg').classList.remove('show');document.getElementById('drawer').classList.remove('open')}
+
+function renderCarrinho(){
+  const el=document.getElementById('drawer-items');el.innerHTML='';
+  if(!carrinho.length){
+    el.innerHTML='<div class="carrinho-vazio">Carrinho vazio.<br><span style="font-size:0.8rem">Adicione itens do cardápio!</span></div>';
+    document.getElementById('total-val').textContent='R$ 0,00';return;
+  }
+  carrinho.forEach(item=>{
+    const d=document.createElement('div');d.className='cart-item';
+    d.innerHTML=`${item.img?`<img class="cart-img" src="${item.img}" onerror="this.outerHTML='<div class=cart-img-ph>🍃</div>'">`:`<div class="cart-img-ph">🍃</div>`}
+    <div class="cart-info"><div class="cart-nome">${item.nome}</div><div class="cart-preco">R$ ${(item.preco*item.qty).toFixed(2)}</div></div>
+    <div class="cart-qty">
+      <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+      <span class="qty-num">${item.qty}</span>
+      <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+    </div>`;
+    el.appendChild(d);
+  });
+  const total=carrinho.reduce((s,i)=>s+(i.preco*i.qty),0);
+  document.getElementById('total-val').textContent='R$ '+total.toFixed(2).replace('.',',');
+}
+
+function changeQty(id,delta){
+  const idx=carrinho.findIndex(i=>i.id===id);if(idx===-1)return;
+  carrinho[idx].qty+=delta;if(carrinho[idx].qty<=0)carrinho.splice(idx,1);
+  atualizarBadge();renderCarrinho();
+}
+
+function enviarWhatsApp(){
+  const nome=document.getElementById('cli-nome').value.trim();
+  const mesa=document.getElementById('cli-mesa').value.trim();
+  const wpp=getWpp();
+  if(!nome||!mesa){alert('Por favor informe seu nome e número da mesa.');return;}
+  if(!carrinho.length){alert('Adicione itens ao carrinho antes de enviar.');return;}
+  if(!wpp){alert('O sistema de pedidos ainda não foi configurado. Chame o garçom!');return;}
+  const total=carrinho.reduce((s,i)=>s+(i.preco*i.qty),0);
+  let msg='✦ *PEDIDO KARIBOKA* ✦\n\n👤 *Cliente:* '+nome+'\n🪑 *Mesa:* '+mesa+'\n\n*Itens do Pedido:*\n';
+  carrinho.forEach(i=>{msg+='• '+i.qty+'x '+i.nome+' — R$ '+(i.preco*i.qty).toFixed(2)+'\n'});
+  msg+='\n💰 *Total: R$ '+total.toFixed(2)+'*';
+  window.open('https://wa.me/'+wpp+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+// ============================================================
+// LOGIN ADMIN
+// ============================================================
+function abrirLogin(){
+  document.getElementById('login-email').value='';
+  document.getElementById('login-senha').value='';
+  document.getElementById('login-erro').textContent='';
+  document.getElementById('modal-login').classList.add('show');
+  setTimeout(()=>document.getElementById('login-email').focus(),100);
+}
+
+function fecharLogin(){document.getElementById('modal-login').classList.remove('show')}
+
+function fazerLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const senha=document.getElementById('login-senha').value;
+  const erro=document.getElementById('login-erro');
+  if(email===ADMIN_EMAIL && senha===ADMIN_SENHA){
+    fecharLogin();
+    abrirAdmin();
+  }else{
+    erro.textContent='E-mail ou senha incorretos.';
+    document.getElementById('login-senha').value='';
+  }
+}
+
+// ============================================================
+// PAINEL ADMIN
+// ============================================================
+function abrirAdmin(){
+  document.getElementById('admin-panel').classList.add('show');
+  atualizarStats();
+  renderLista('comidas');
+  renderLista('bebidas');
+  carregarWppConfig();
+}
+
+function sairAdmin(){document.getElementById('admin-panel').classList.remove('show')}
+function voltarCardapio(){document.getElementById('admin-panel').classList.remove('show')}
+
+function trocarAdminTab(nome,el){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.admin-panel-inner').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('adm-'+nome).classList.add('active');
+  if(nome==='comidas'||nome==='bebidas')renderLista(nome);
+  if(nome==='dashboard')atualizarStats();
+}
+
+function atualizarStats(){
+  const c=getCardapio('comidas').length;
+  const b=getCardapio('bebidas').length;
+  document.getElementById('st-comidas').textContent=c;
+  document.getElementById('st-bebidas').textContent=b;
+  document.getElementById('st-total').textContent=c+b;
+}
+
+function prevImg(inputId,imgId){
+  const url=document.getElementById(inputId).value.trim();
+  const img=document.getElementById(imgId);
+  if(url){img.src=url;img.classList.add('show')}else{img.classList.remove('show')}
+}
+
+function addItem(tipo){
+  const p=tipo==='comidas'?'c':'b';
+  const nome=document.getElementById(p+'-nome').value.trim();
+  const cat=document.getElementById(p+'-cat').value;
+  const preco=parseFloat(document.getElementById(p+'-preco').value);
+  const img=document.getElementById(p+'-img').value.trim();
+  const desc=document.getElementById(p+'-desc').value.trim();
+  const fb=document.getElementById('fb-'+tipo);
+  if(!nome||isNaN(preco)||preco<=0){
+    fb.textContent='Preencha nome e preço.';fb.className='feedback-msg erro';
+    setTimeout(()=>fb.textContent='',3000);return;
+  }
+  const arr=getCardapio(tipo);
+  arr.push({id:uid(),nome,cat,preco,img,desc});
+  setCardapio(tipo,arr);
+  document.getElementById(p+'-nome').value='';
+  document.getElementById(p+'-preco').value='';
+  document.getElementById(p+'-img').value='';
+  document.getElementById(p+'-desc').value='';
+  document.getElementById(p+'-prev').classList.remove('show');
+  fb.textContent='✦ Adicionado com sucesso!';fb.className='feedback-msg';
+  setTimeout(()=>fb.textContent='',3000);
+  renderLista(tipo);atualizarStats();
+  renderGrid(tipo);
+}
+
+function renderLista(tipo){
+  const arr=getCardapio(tipo);
+  const el=document.getElementById('lista-'+tipo);
+  el.innerHTML='';
+  if(!arr.length){el.innerHTML='<div class="adm-vazio">Nenhum item cadastrado ainda.</div>';return;}
+  arr.forEach(item=>{
+    const d=document.createElement('div');d.className='item-adm';
+    d.innerHTML=`${item.img?`<img class="item-adm-img" src="${item.img}" onerror="this.style.display='none'">`:`<div class="item-adm-ph">🍃</div>`}
+    <div class="item-adm-body">
+      <div class="item-adm-cat">${item.cat}</div>
+      <div class="item-adm-nome">${item.nome}</div>
+      <div class="item-adm-desc">${item.desc||'Sem descrição'}</div>
+      <div class="item-adm-footer">
+        <div class="item-adm-preco">R$ ${parseFloat(item.preco).toFixed(2)}</div>
+        <div class="item-adm-acoes">
+          <button class="btn-edit" onclick="abrirEdit('${tipo}','${item.id}')">Editar</button>
+          <button class="btn-del" onclick="deletarItem('${tipo}','${item.id}')">Excluir</button>
+        </div>
+      </div>
+    </div>`;
+    el.appendChild(d);
+  });
+}
+
+function abrirEdit(tipo,id){
+  const item=getCardapio(tipo).find(i=>i.id===id);if(!item)return;
+  document.getElementById('edit-tipo').value=tipo;
+  document.getElementById('edit-id').value=id;
+  document.getElementById('edit-nome').value=item.nome;
+  document.getElementById('edit-cat').value=item.cat;
+  document.getElementById('edit-preco').value=item.preco;
+  document.getElementById('edit-img').value=item.img||'';
+  document.getElementById('edit-desc').value=item.desc||'';
+  const prev=document.getElementById('edit-prev');
+  if(item.img){prev.src=item.img;prev.classList.add('show')}else{prev.classList.remove('show')}
+  document.getElementById('edit-bg').classList.add('show');
+}
+
+function fecharEdit(e){if(e.target===document.getElementById('edit-bg'))document.getElementById('edit-bg').classList.remove('show')}
+
+function salvarEdicao(){
+  const tipo=document.getElementById('edit-tipo').value;
+  const id=document.getElementById('edit-id').value;
+  const arr=getCardapio(tipo);
+  const idx=arr.findIndex(i=>i.id===id);if(idx===-1)return;
+  arr[idx].nome=document.getElementById('edit-nome').value.trim();
+  arr[idx].cat=document.getElementById('edit-cat').value.trim();
+  arr[idx].preco=parseFloat(document.getElementById('edit-preco').value);
+  arr[idx].img=document.getElementById('edit-img').value.trim();
+  arr[idx].desc=document.getElementById('edit-desc').value.trim();
+  setCardapio(tipo,arr);
+  document.getElementById('edit-bg').classList.remove('show');
+  renderLista(tipo);atualizarStats();
+  renderGrid(tipo);
+}
+
+function deletarItem(tipo,id){
+  if(!confirm('Excluir este item?'))return;
+  setCardapio(tipo,getCardapio(tipo).filter(i=>i.id!==id));
+  renderLista(tipo);atualizarStats();
+  renderGrid(tipo);
+}
+
+// ============================================================
+// CONFIGURAÇÕES
+// ============================================================
+function carregarWppConfig(){
+  const wpp=getWpp();
+  if(wpp)document.getElementById('wpp-input').value=wpp;
+}
+
+function salvarWpp(){
+  const num=document.getElementById('wpp-input').value.trim().replace(/\D/g,'');
+  if(!num){document.getElementById('wpp-saved').textContent='Digite um número válido.';return;}
+  localStorage.setItem('kb_wpp',num);
+  document.getElementById('wpp-saved').textContent='✦ Número salvo com sucesso!';
+  setTimeout(()=>document.getElementById('wpp-saved').textContent='',3000);
+}
+
+function alterarSenha(){
+  const atual=document.getElementById('senha-atual').value;
+  const nova=document.getElementById('senha-nova').value;
+  const conf=document.getElementById('senha-conf').value;
+  const fb=document.getElementById('fb-senha');
+  if(atual!==ADMIN_SENHA){fb.textContent='Senha atual incorreta.';fb.className='feedback-msg erro';return;}
+  if(nova.length<6){fb.textContent='A nova senha deve ter pelo menos 6 caracteres.';fb.className='feedback-msg erro';return;}
+  if(nova!==conf){fb.textContent='As senhas não coincidem.';fb.className='feedback-msg erro';return;}
+  ADMIN_SENHA=nova;
+  localStorage.setItem('kb_senha',nova);
+  document.getElementById('senha-atual').value='';
+  document.getElementById('senha-nova').value='';
+  document.getElementById('senha-conf').value='';
+  fb.textContent='✦ Senha alterada com sucesso!';fb.className='feedback-msg';
+  setTimeout(()=>fb.textContent='',3000);
+}
+
+// ============================================================
+// INICIALIZAR
+// ============================================================
+renderGrid('comidas');
+renderGrid('bebidas');
+</script>
+</body>
+</html>
